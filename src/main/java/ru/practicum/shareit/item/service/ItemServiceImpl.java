@@ -10,7 +10,6 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.StorageUser;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
