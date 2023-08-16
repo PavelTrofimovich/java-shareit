@@ -15,18 +15,18 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final String USER = "X-Sharer-User-Id";
+    private static final String USER_ID = "X-Sharer-User-Id";
 
     @PostMapping
     public ItemDto addNewItem(@Valid @RequestBody ItemDto itemDto,
-                              @RequestHeader(value = USER) Integer userId) {
+                              @RequestHeader(value = USER_ID) Integer userId) {
         log.info("Запрос на добавление Item {} с userId {}", itemDto, userId);
         return itemService.addNewItem(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable Integer itemId,
-                              @RequestHeader(value = USER) Integer userId) {
+                              @RequestHeader(value = USER_ID) Integer userId) {
         log.info("Запрос на обновление Item с ID {}", itemId);
         return itemService.updateItem(itemDto, itemId, userId);
     }
@@ -38,13 +38,13 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getItems(@RequestHeader(value = USER) Integer userId) {
+    public List<ItemDto> getItems(@RequestHeader(value = USER_ID) Integer userId) {
         log.info("Запрос на вывод Items пользователя с ID {}", userId);
         return itemService.getUserItems(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestHeader(value = USER) Integer userId,
+    public List<ItemDto> searchItems(@RequestHeader(value = USER_ID) Integer userId,
                                      @RequestParam("text") String search) {
         log.info("Запрос на поиск Item по тексту: {}", search);
         return itemService.searchItems(userId, search);
