@@ -76,7 +76,7 @@ public class InMemoryStorageItem implements StorageItem {
 
     private void addUserItem(Item item, User user) {
         List<Item> items = userItems.get(user);
-        if(items == null) {
+        if (items == null) {
             List<Item> newList = new ArrayList<>();
             newList.add(item);
             userItems.put(user, newList);
