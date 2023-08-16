@@ -39,15 +39,15 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleMethodArgumentNotValidException (final MethodArgumentNotValidException e) {
+    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error("MethodArgumentNotValidException: " + e.getMessage());
         return new ErrorResponse(e.getMessage());
     }
 
-   @ExceptionHandler
-   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-   public ErrorResponse handleThrowable(final Throwable e) {
-       log.error(e.getMessage());
-       return new ErrorResponse("Произошла непредвиденная ошибка.");
-   }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleThrowable(final Throwable e) {
+        log.error(e.getMessage());
+        return new ErrorResponse("Произошла непредвиденная ошибка.");
+    }
 }
