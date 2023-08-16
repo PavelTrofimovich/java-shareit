@@ -11,6 +11,7 @@ import ru.practicum.shareit.user.storage.StorageUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,14 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getUserItems(Integer userId) {
         User user = storageUser.getUser(userId);
-        List<Item> items = storageItem.getItems();
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item item : items) {
-            if (item.getOwner().equals(user)) {
-                itemDtoList.add(ItemMapper.toItemDto(item));
-            }
-        }
-        return itemDtoList;
+        return storageItem.ss(user).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
@@ -53,14 +47,14 @@ public class ItemServiceImpl implements ItemService {
         List<ItemDto> itemDtoList = new ArrayList<>();
         String description;
         String name;
-        if (search.isEmpty()) {
+        if (search.isBlank()) {
             return itemDtoList;
         }
         search = search.toLowerCase();
         for (Item item : storageItem.getItems()) {
             description = item.getDescription().toLowerCase();
             name = item.getName().toLowerCase();
-            if ((name.contains(search) || description.contains(search)) && item.getAvailable()) {
+            if (item.getAvailable() && (name.contains(search) || description.contains(search))) {
                 itemDtoList.add(ItemMapper.toItemDto(item));
             }
         }

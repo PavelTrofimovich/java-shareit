@@ -10,16 +10,14 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.StorageUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class InMemoryStorageUser implements StorageUser {
     private final HashMap<Integer, User> data = new HashMap<>();
-    private final List<String> emails = new ArrayList<>();
+    private final Set<String> emails = new HashSet<>();
     protected Integer id = 0;
 
     @Override

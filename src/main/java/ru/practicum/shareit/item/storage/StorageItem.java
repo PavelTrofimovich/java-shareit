@@ -14,4 +14,6 @@ public interface StorageItem {
     Item getItem(Integer itemId);
 
     List<Item> getItems();
+
+    List<Item> ss(User user);
 }

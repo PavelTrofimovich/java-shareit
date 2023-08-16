@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InMemoryStorageItem implements StorageItem {
     private final HashMap<Integer, Item> data = new HashMap<>();
+    private final HashMap<User, List<Item>> userItems = new HashMap<>();
     protected Integer id = 0;
 
     @Override
@@ -28,6 +29,7 @@ public class InMemoryStorageItem implements StorageItem {
         item.setId(++id);
         item.setOwner(user);
         data.put(id, item);
+        addUserItem(data.get(id), user);
         return item;
     }
 
@@ -70,5 +72,21 @@ public class InMemoryStorageItem implements StorageItem {
     @Override
     public List<Item> getItems() {
         return new ArrayList<Item>(data.values());
+    }
+
+    private void addUserItem(Item item, User user) {
+        List<Item> items = userItems.get(user);
+        if(items == null) {
+            List<Item> newList = new ArrayList<>();
+            newList.add(item);
+            userItems.put(user, newList);
+        } else {
+            items.add(item);
+        }
+    }
+
+    @Override
+    public List<Item> ss(User user) {
+        return userItems.get(user);
     }
 }

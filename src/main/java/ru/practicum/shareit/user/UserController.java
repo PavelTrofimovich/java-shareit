@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUser(@Valid @PathVariable Integer id) {
+    public UserDto getUser(@PathVariable Integer id) {
         log.info("Запрос на вывод пользователя с ID {}", id);
         return userService.getUser(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@Valid @PathVariable Integer id) {
+    public void deleteUser(@PathVariable Integer id) {
         log.info("Запрос на удаление пользователя с ID {}", id);
         userService.deleteUser(id);
     }
