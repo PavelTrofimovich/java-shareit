@@ -15,5 +15,5 @@ public interface StorageItem {
 
     List<Item> getItems();
 
-    List<Item> ss(User user);
+    List<Item> getUserItems(User user);
 }

@@ -86,7 +86,7 @@ public class InMemoryStorageItem implements StorageItem {
     }
 
     @Override
-    public List<Item> ss(User user) {
+    public List<Item> getUserItems(User user) {
         return new ArrayList<Item>(userItems.get(user));
     }
 }
