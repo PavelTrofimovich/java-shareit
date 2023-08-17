@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getUserItems(Integer userId) {
         User user = storageUser.getUser(userId);
-        return storageItem.ss(user).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return storageItem.getUserItems(user).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override

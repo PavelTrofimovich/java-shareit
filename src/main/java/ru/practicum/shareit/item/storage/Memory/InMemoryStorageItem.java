@@ -74,6 +74,11 @@ public class InMemoryStorageItem implements StorageItem {
         return new ArrayList<Item>(data.values());
     }
 
+    @Override
+    public List<Item> getUserItems(User user) {
+        return new ArrayList<Item>(userItems.get(user));
+    }
+
     private void addUserItem(Item item, User user) {
         List<Item> items = userItems.get(user);
         if (items == null) {
@@ -83,10 +88,5 @@ public class InMemoryStorageItem implements StorageItem {
         } else {
             items.add(item);
         }
-    }
-
-    @Override
-    public List<Item> getUserItems(User user) {
-        return new ArrayList<Item>(userItems.get(user));
     }
 }
