@@ -38,7 +38,7 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new ValidationException("Объект не доступен");
         }
-        if (item.getOwner().getId() == userId) {
+        if (item.getOwner().getId().equals(userId)) {
             throw new UserNotHaveThisItem();
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
@@ -51,7 +51,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoResponse approvedBooking(Integer userId, Integer bookingId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
-        if (booking.getItem().getOwner().getId() != userId) {
+        if (!booking.getItem().getOwner().getId().equals(userId)) {
             throw new UserNotHaveThisItem();
         }
         if (!booking.getStatus().equals(Status.WAITING)) {

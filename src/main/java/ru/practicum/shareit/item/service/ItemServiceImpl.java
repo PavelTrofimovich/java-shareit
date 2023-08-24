@@ -78,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
         comments.forEach(comment -> commentDto.add(CommentMapper.toCommentDto(comment)));
         BookingDto lastBooking = null;
         BookingDto nextBooking = null;
-        if (item.getOwner().getId() == userId) {
+        if (item.getOwner().getId().equals(userId)) {
             LocalDateTime dateTimeNow = LocalDateTime.now();
             lastBooking = bookingRepository
                     .findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(item.getId(),
@@ -99,7 +99,6 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime dateTimeNow = LocalDateTime.now();
         List<Item> list = itemRepository.findAllByOwnerId(userId);
         List<ItemBookingDto> listItemBookingDto = new ArrayList<>();
-        List<CommentDto> commentDto = new ArrayList<>();
         list.forEach(item -> {
             BookingDto lastBooking = bookingRepository
                     .findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(item.getId(),
@@ -107,7 +106,6 @@ public class ItemServiceImpl implements ItemService {
             BookingDto nextBooking = bookingRepository
                     .findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(item.getId(),
                             dateTimeNow, Status.REJECTED);
-            List<Comment> comments = commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId());
             listItemBookingDto.add(ItemMapper.toItemBookingDto(item, lastBooking, nextBooking));
         });
         return listItemBookingDto;
