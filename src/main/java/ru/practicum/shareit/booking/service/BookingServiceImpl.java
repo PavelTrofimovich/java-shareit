@@ -49,8 +49,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     @Override
     public BookingDtoResponse approvedBooking(Integer userId, Integer bookingId, Boolean approved) {
-        Booking booking = bookingRepository.findById(bookingId).
-                orElseThrow(() -> new NotFoundException("Бронь не найдена"));
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
         if (booking.getItem().getOwner().getId() != userId) {
             throw new UserNotHaveThisItem();
         }
