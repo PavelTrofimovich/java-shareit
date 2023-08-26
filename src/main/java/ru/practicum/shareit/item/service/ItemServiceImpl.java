@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -24,11 +26,19 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.util.stream.Collectors;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
+import static org.springframework.data.domain.Sort.Direction.ASC;
+import static org.springframework.data.domain.Sort.Direction.DESC;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
@@ -51,7 +61,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(ItemDto itemDto, Integer itemId, Integer userId) {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Предмет не найден"));
         if (!Objects.equals(userId, item.getOwner().getId())) {
-            throw new UserNotHaveThisItem();
+            throw new UserNotHaveThisItem("Пользователь не является владельцем вещи");
         }
         Boolean available = itemDto.getAvailable();
         String name = itemDto.getName();
@@ -96,16 +106,26 @@ public class ItemServiceImpl implements ItemService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
-        LocalDateTime dateTimeNow = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
         List<Item> list = itemRepository.findAllByOwnerId(userId);
         List<ItemBookingDto> listItemBookingDto = new ArrayList<>();
+        List<BookingDto> bookings1 = bookingRepository
+                .findAllByItemInAndStartAfterAndStatusNot(list, now, Status.REJECTED, Sort.by(ASC, "start"));
+        Map<Integer, List<BookingDto>> ne1 = bookings1.stream()
+                .collect(Collectors.groupingBy(BookingDto::getItemId, toList()));
+        List<BookingDto> bookings2 = bookingRepository
+                .findAllByItemInAndStartBeforeAndStatus(list, now, Status.APPROVED, Sort.by(DESC, "start"));
+        Map<Integer, List<BookingDto>> le2 = bookings2.stream()
+                .collect(Collectors.groupingBy(BookingDto::getItemId, toList()));
         list.forEach(item -> {
-            BookingDto lastBooking = bookingRepository
-                    .findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(item.getId(),
-                            dateTimeNow, Status.APPROVED);
-            BookingDto nextBooking = bookingRepository
-                    .findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(item.getId(),
-                            dateTimeNow, Status.REJECTED);
+            BookingDto nextBooking = null;
+            BookingDto lastBooking = null;
+            if (ne1.containsKey(item.getId())) {
+                nextBooking = ne1.get(item.getId()).get(0);
+            }
+            if (le2.containsKey(item.getId())) {
+                lastBooking = le2.get(item.getId()).get(0);
+            }
             listItemBookingDto.add(ItemMapper.toItemBookingDto(item, lastBooking, nextBooking));
         });
         return listItemBookingDto;

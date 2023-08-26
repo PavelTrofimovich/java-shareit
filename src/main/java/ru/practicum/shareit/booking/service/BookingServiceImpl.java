@@ -39,11 +39,11 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("Объект не доступен");
         }
         if (item.getOwner().getId().equals(userId)) {
-            throw new UserNotHaveThisItem();
+            throw new UserNotHaveThisItem("Пользователь не является владельцем вещи");
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         Booking booking = bookingRepository.save(BookingMapper.toBooking(dto, user, item));
-        return BookingMapper.toBookingDto(booking);
+        return BookingMapper.toBookingDtoResponse(booking);
     }
 
     @Transactional
@@ -52,13 +52,13 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
         if (!booking.getItem().getOwner().getId().equals(userId)) {
-            throw new UserNotHaveThisItem();
+            throw new UserNotHaveThisItem("Пользователь не является владельцем вещи");
         }
         if (!booking.getStatus().equals(Status.WAITING)) {
             throw new ValidationException("Объект Booking имеет отличный статус от WAITING");
         }
         booking.setStatus(approved ? Status.APPROVED : Status.REJECTED);
-        return BookingMapper.toBookingDto(booking);
+        return BookingMapper.toBookingDtoResponse(booking);
     }
 
     @Transactional
@@ -69,7 +69,7 @@ public class BookingServiceImpl implements BookingService {
         }
         Booking booking = bookingRepository.findBookingByOwnerOrBooker(bookingId, userId)
                 .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
-        return BookingMapper.toBookingDto(booking);
+        return BookingMapper.toBookingDtoResponse(booking);
     }
 
     @Transactional
@@ -106,7 +106,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
         }
         List<BookingDtoResponse> list = new ArrayList<>();
-        listBookings.forEach(booking -> list.add(BookingMapper.toBookingDto(booking)));
+        listBookings.forEach(booking -> list.add(BookingMapper.toBookingDtoResponse(booking)));
         return list;
     }
 
@@ -144,7 +144,7 @@ public class BookingServiceImpl implements BookingService {
                 break;
         }
         List<BookingDtoResponse> list = new ArrayList<>();
-        listBookings.forEach(booking -> list.add(BookingMapper.toBookingDto(booking)));
+        listBookings.forEach(booking -> list.add(BookingMapper.toBookingDtoResponse(booking)));
         return list;
     }
 

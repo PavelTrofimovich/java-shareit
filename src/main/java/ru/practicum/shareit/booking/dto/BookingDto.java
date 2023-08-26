@@ -8,4 +8,5 @@ import lombok.Data;
 public class BookingDto {
     private Integer id;
     private Integer bookerId;
+    private Integer itemId;
 }

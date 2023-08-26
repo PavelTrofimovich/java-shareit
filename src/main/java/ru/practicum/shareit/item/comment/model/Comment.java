@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.comment.model;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -27,6 +28,6 @@ public class Comment {
     @ToString.Exclude
     private User author;
 
-    @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime created;
 }

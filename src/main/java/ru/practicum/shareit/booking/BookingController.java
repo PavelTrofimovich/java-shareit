@@ -27,14 +27,15 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse approvedBooking(@RequestHeader(value = USER_ID) Integer userId,
-                                              @PathVariable @Valid Integer bookingId,
-                                              @RequestParam @Valid Boolean approved) {
+                                              @PathVariable Integer bookingId,
+                                              @RequestParam Boolean approved) {
+        log.info("Пользователь изменил статус бронирования");
         return bookingService.approvedBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDtoResponse getBooking(@RequestHeader(value = USER_ID) Integer userId,
-                                         @PathVariable @Valid Integer bookingId) {
+                                         @PathVariable Integer bookingId) {
         return bookingService.getBooking(userId, bookingId);
     }
 
