@@ -21,7 +21,7 @@ public class BookingController {
     @PostMapping
     public BookingDtoResponse addBooking(@RequestBody @Valid BookingDtoRequest bookingDto,
                                          @RequestHeader(value = USER_ID) Integer userId) {
-        log.info("Создано новое бронирование");
+        log.info("Создано новое бронирование {}", bookingDto);
         return bookingService.addBooking(bookingDto, userId);
     }
 
@@ -29,25 +29,28 @@ public class BookingController {
     public BookingDtoResponse approvedBooking(@RequestHeader(value = USER_ID) Integer userId,
                                               @PathVariable Integer bookingId,
                                               @RequestParam Boolean approved) {
-        log.info("Пользователь изменил статус бронирования");
+        log.info("Запрос на подтверждение бронирования");
         return bookingService.approvedBooking(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDtoResponse getBooking(@RequestHeader(value = USER_ID) Integer userId,
                                          @PathVariable Integer bookingId) {
+        log.info("Было предоставлено бронирование {} для пользователя {}", bookingId, userId);
         return bookingService.getBooking(userId, bookingId);
     }
 
     @GetMapping
     public List<BookingDtoResponse> getBookings(@RequestHeader(value = USER_ID) Integer userId,
                                                 @RequestParam(defaultValue = "ALL") String state) {
+        log.info("Для пользователя {} были найдены бронирование с состоянием {}", userId, state);
         return bookingService.getBookings(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsOwner(@RequestHeader(value = USER_ID) Integer userId,
                                                      @RequestParam(defaultValue = "ALL") String state) {
+        log.info("Для Владельца {} было найдено бронирование с состоянием {}", userId, state);
         return bookingService.getBookingsOwner(userId, state);
     }
 }
