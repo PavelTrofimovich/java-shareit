@@ -17,7 +17,6 @@ import ru.practicum.shareit.item.comment.dto.CommentDtoRequest;
 import ru.practicum.shareit.item.comment.mapper.CommentMapper;
 import ru.practicum.shareit.item.comment.model.Comment;
 import ru.practicum.shareit.item.comment.repository.CommentRepository;
-import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemCommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -25,8 +24,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
-
-import java.util.stream.Collectors;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
