@@ -42,7 +42,7 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemBookingDto> getItems(@RequestHeader(value = USER_ID) Integer userId) {
+    public List<ItemCommentDto> getItems(@RequestHeader(value = USER_ID) Integer userId) {
         log.info("Запрос на вывод Items пользователя с ID {}", userId);
         return itemService.getUserItems(userId);
     }

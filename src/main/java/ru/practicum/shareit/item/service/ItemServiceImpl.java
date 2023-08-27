@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -102,33 +103,41 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public List<ItemBookingDto> getUserItems(Integer userId) {
+    public List<ItemCommentDto> getUserItems(Integer userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
         LocalDateTime now = LocalDateTime.now();
-        List<Item> list = itemRepository.findAllByOwnerId(userId);
-        List<ItemBookingDto> listItemBookingDto = new ArrayList<>();
-        List<BookingDto> bookings1 = bookingRepository
-                .findAllByItemInAndStartAfterAndStatusNot(list, now, Status.REJECTED, Sort.by(ASC, "start"));
-        Map<Integer, List<BookingDto>> ne1 = bookings1.stream()
-                .collect(Collectors.groupingBy(BookingDto::getItemId, toList()));
-        List<BookingDto> bookings2 = bookingRepository
-                .findAllByItemInAndStartBeforeAndStatus(list, now, Status.APPROVED, Sort.by(DESC, "start"));
-        Map<Integer, List<BookingDto>> le2 = bookings2.stream()
-                .collect(Collectors.groupingBy(BookingDto::getItemId, toList()));
-        list.forEach(item -> {
+        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        List<ItemCommentDto> listItemCommentDto = new ArrayList<>();
+        List<BookingDto> nextBookingsList = bookingRepository
+                .findAllByItemInAndStartAfterAndStatusNot(items, now, Status.REJECTED, Sort.by(ASC, "start"));
+        Map<Integer, List<BookingDto>> nextBookingsMap = nextBookingsList.stream()
+                .collect(groupingBy(BookingDto::getItemId, toList()));
+        List<BookingDto> lastBookingsList = bookingRepository
+                .findAllByItemInAndStartBeforeAndStatus(items, now, Status.APPROVED, Sort.by(DESC, "start"));
+        Map<Integer, List<BookingDto>> lastBookingsMap = lastBookingsList.stream()
+                .collect(groupingBy(BookingDto::getItemId, toList()));
+        Map<Integer, List<Comment>> comments = commentRepository.findByItemIn(items, Sort.by(DESC, "created"))
+                .stream()
+                .collect(groupingBy(comment -> comment.getItem().getId(), toList()));
+        items.forEach(item -> {
+            Integer itemId = item.getId();
             BookingDto nextBooking = null;
             BookingDto lastBooking = null;
-            if (ne1.containsKey(item.getId())) {
-                nextBooking = ne1.get(item.getId()).get(0);
+            List<CommentDto> commentsList = null;
+            if (nextBookingsMap.containsKey(itemId)) {
+                nextBooking = nextBookingsMap.get(itemId).get(0);
             }
-            if (le2.containsKey(item.getId())) {
-                lastBooking = le2.get(item.getId()).get(0);
+            if (lastBookingsMap.containsKey(itemId)) {
+                lastBooking = lastBookingsMap.get(itemId).get(0);
             }
-            listItemBookingDto.add(ItemMapper.toItemBookingDto(item, lastBooking, nextBooking));
+            if (comments.containsKey(itemId)) {
+                commentsList = comments.get(itemId).stream().map(CommentMapper::toCommentDto).collect(toList());
+            }
+            listItemCommentDto.add(ItemMapper.toItemCommentDto(item, commentsList, lastBooking, nextBooking));
         });
-        return listItemBookingDto;
+        return listItemCommentDto;
     }
 
     @Transactional

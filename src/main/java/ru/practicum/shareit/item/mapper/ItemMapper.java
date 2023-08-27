@@ -29,19 +29,8 @@ public class ItemMapper {
         return item;
     }
 
-    public ItemBookingDto toItemBookingDto(Item item, BookingDto lastBooking, BookingDto nextBooking) {
-        return new ItemBookingDto(
-                toItemDto(item),
-                lastBooking,
-                nextBooking
-        );
-    }
-
     public ItemCommentDto toItemCommentDto(Item item, List<CommentDto> comments,
                                            BookingDto lastBooking, BookingDto nextBooking) {
-        return new ItemCommentDto(
-                toItemBookingDto(item, lastBooking, nextBooking),
-                comments
-        );
+        return new ItemCommentDto(toItemDto(item), lastBooking, nextBooking, comments);
     }
 }
