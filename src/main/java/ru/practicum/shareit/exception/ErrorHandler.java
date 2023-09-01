@@ -7,9 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.exception.exceptions.NotFoundException;
-import ru.practicum.shareit.exception.exceptions.EmailException;
-import ru.practicum.shareit.exception.exceptions.UserNotHaveThisItem;
+import ru.practicum.shareit.exception.exceptions.*;
 import ru.practicum.shareit.exception.model.ErrorResponse;
 
 import java.util.Map;
@@ -45,9 +43,23 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidationException(final ValidationException e) {
+        log.error("ValidationException: " + e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable e) {
         log.error(e.getMessage());
         return new ErrorResponse("Произошла непредвиденная ошибка.");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleUnknownStateException(final UnknownStateException e) {
+        log.warn(e.toString());
+        return Map.of("error", "Unknown state: " + e.getMessage());
     }
 }
