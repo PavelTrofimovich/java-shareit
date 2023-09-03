@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 
 @SpringBootTest
 @Transactional
+@TestPropertySource(properties = {"db.name=testBooking"})
 class BookingServiceIntegrationTest {
     @Autowired
     private UserRepository userRepository;

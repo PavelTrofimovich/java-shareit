@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.exceptions.NotFoundException;
 import ru.practicum.shareit.user.model.User;
@@ -13,6 +14,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 @Transactional
 @SpringBootTest
+@TestPropertySource(properties = {"db.name=testBooking"})
 public class IntegrationUserServiceTest {
     @Autowired
     private UserService userService;
