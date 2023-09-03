@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS items (
     request_id INTEGER,
     CONSTRAINT fk_items_to_users FOREIGN KEY(owner_id) REFERENCES users(id),
     CONSTRAINT fk_items_to_requests FOREIGN KEY(request_id) REFERENCES requests(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
