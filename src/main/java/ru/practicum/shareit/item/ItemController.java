@@ -10,6 +10,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -41,16 +43,20 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemCommentDto> getItems(@RequestHeader(value = USER_ID) Integer userId) {
+    public List<ItemCommentDto> getItems(@RequestHeader(value = USER_ID) Integer userId,
+                                         @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                         @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Запрос на вывод Items пользователя с ID {}", userId);
-        return itemService.getUserItems(userId);
+        return itemService.getUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(@RequestHeader(value = USER_ID) Integer userId,
-                                     @RequestParam("text") String search) {
+                                     @RequestParam("text") String search,
+                                     @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                     @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Запрос на поиск Item по тексту: {}", search);
-        return itemService.searchItems(userId, search);
+        return itemService.searchItems(userId, search, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

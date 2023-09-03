@@ -58,8 +58,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleUnknownStateException(final UnknownStateException e) {
+    public ErrorResponse handleUnknownStateException(final UnknownStateException e) {
         log.warn(e.toString());
-        return Map.of("error", "Unknown state: " + e.getMessage());
+        return new ErrorResponse(e.getMessage());
     }
 }
