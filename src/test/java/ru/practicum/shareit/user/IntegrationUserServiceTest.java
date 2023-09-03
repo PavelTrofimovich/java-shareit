@@ -50,4 +50,3 @@ public class IntegrationUserServiceTest {
         userRepository.deleteAll();
     }
 }
-
