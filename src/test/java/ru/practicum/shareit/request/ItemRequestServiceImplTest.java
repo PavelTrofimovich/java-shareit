@@ -78,7 +78,7 @@ class ItemRequestServiceImplTest {
         when(itemRequestRepository.findAllByRequesterIdNot(anyInt(), eq(pageRequest)))
                 .thenReturn(new PageImpl<>(List.of(request)));
         when(itemRepository.findAllByItemRequestIn(List.of(request))).thenReturn(List.of(item));
-        List<ItemRequestDtoResponse> result = itemRequestService.getAllRequests(requester.getId(), 0 ,5);
+        List<ItemRequestDtoResponse> result = itemRequestService.getAllRequests(requester.getId(), 0, 5);
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(itemRequestDtoResponse, result.get(0));

@@ -29,7 +29,7 @@ public class ItemRequestRepositoryTest {
     private User user;
     private User requester;
     private ItemRequest request;
-    private final Sort SORT = Sort.by(DESC, "created");
+    private final Sort sort = Sort.by(DESC, "created");
 
     @BeforeEach
     public void beforeEach() {
@@ -42,7 +42,7 @@ public class ItemRequestRepositoryTest {
 
     @Test
     public void findAllByRequesterIdTest() {
-        List<ItemRequest> result = itemRequestRepository.findAllByRequesterId(requester.getId(), SORT);
+        List<ItemRequest> result = itemRequestRepository.findAllByRequesterId(requester.getId(), sort);
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(request.getDescription(), result.get(0).getDescription());
