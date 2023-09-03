@@ -49,12 +49,4 @@ class ErrorHandlerTest {
         Assertions.assertNotNull(errorResponse);
         Assertions.assertEquals("Произошла непредвиденная ошибка.", errorResponse.getError());
     }
-
-    @Test
-    public void handleUnknownStateExceptionTest() {
-        UnknownStateException e = new UnknownStateException("UnknownStateException");
-        ErrorResponse errorResponse = handler.handleUnknownStateException(e);
-        Assertions.assertNotNull(errorResponse);
-        Assertions.assertEquals("UnknownStateException", errorResponse.getError());
-    }
 }
