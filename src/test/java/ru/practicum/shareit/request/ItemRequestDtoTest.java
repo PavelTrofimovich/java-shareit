@@ -17,11 +17,11 @@ public class ItemRequestDtoTest {
     @Autowired
     private JacksonTester<ItemRequestDto> jTester;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Test
     void itemRequestDtoJsonTest() throws IOException {
-        LocalDateTime created = LocalDateTime.now();
+        LocalDateTime created = LocalDateTime.of(2001,2,3,4,5,6);
         ItemRequestDto dto = new ItemRequestDto(1, "description", created);
 
         JsonContent<ItemRequestDto> content = jTester.write(dto);

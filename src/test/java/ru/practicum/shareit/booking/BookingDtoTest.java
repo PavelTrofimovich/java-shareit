@@ -24,12 +24,12 @@ public class BookingDtoTest {
     @Autowired
     private JacksonTester<BookingDto> jTesterBookingDto;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     @Test
     void bookingDtoResponseJsonTest() throws IOException {
-        LocalDateTime start = LocalDateTime.now().plusDays(1);
-        LocalDateTime end = LocalDateTime.now().plusDays(2);
+        LocalDateTime start = LocalDateTime.of(2001,2,3,4,5,6);
+        LocalDateTime end = LocalDateTime.of(2002,2,3,4,5,6);
         UserDto userDto = new UserDto(1, "name", "mail@mail.by");
         ItemDto itemDto = new ItemDto(1, "name", "description", true, 1);
         BookingDtoResponse dtoResponse = new BookingDtoResponse(1, start, end, Status.APPROVED, userDto, itemDto);
