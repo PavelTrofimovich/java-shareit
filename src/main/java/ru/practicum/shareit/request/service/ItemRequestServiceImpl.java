@@ -36,13 +36,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Transactional
     @Override
     public ItemRequestDto addRequest(ItemRequestDtoRequest itemRequestDto, Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        ItemRequest itemRequest2 = ItemRequestMapper.toItemRequest(itemRequestDto, user);
-        ItemRequest itemRequest = itemRequestRepository.save(itemRequest2);
-        return ItemRequestMapper.toItemRequestDto(itemRequest);
+        User requester = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        ItemRequest itemRequestSaved =
+                itemRequestRepository.save(ItemRequestMapper.toItemRequest(itemRequestDto, requester));
+        return ItemRequestMapper.toItemRequestDto(itemRequestSaved);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDtoResponse> getUserRequests(Integer userId) {
         if (userRepository.existsById(userId)) {
@@ -59,7 +60,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<ItemRequestDtoResponse> getAllRequests(Integer userId, int from, int size) {
         if (userRepository.existsById(userId)) {
@@ -76,7 +77,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public ItemRequestDtoResponse getRequest(Integer userId, Integer requestId) {
         if (userRepository.existsById(userId)) {

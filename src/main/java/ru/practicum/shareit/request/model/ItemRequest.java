@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.user.model.User;
@@ -21,6 +22,7 @@ public class ItemRequest {
     @Column(nullable = false)
     private String description;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @CreationTimestamp
     private LocalDateTime created;
 

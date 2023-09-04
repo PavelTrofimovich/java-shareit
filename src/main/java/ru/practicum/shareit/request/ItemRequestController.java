@@ -26,20 +26,20 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto addRequest(@RequestBody @Valid ItemRequestDtoRequest request,
                                      @RequestHeader(value = USER_ID) Integer userId) {
-        log.info("Создан новый запрос");
+        log.info("Пользователь id {} создал новый запрос {}", userId, request.getDescription());
         return itemRequestService.addRequest(request, userId);
     }
 
     @GetMapping
     public List<ItemRequestDtoResponse> getUserRequests(@RequestHeader(value = USER_ID) Integer userId) {
-        log.info("Создан новый запрос");
+        log.info("Пользователь id {} получил список своих запросов", userId);
         return itemRequestService.getUserRequests(userId);
     }
 
     @GetMapping("/{requestId}")
     public ItemRequestDtoResponse getRequest(@PathVariable Integer requestId,
                                              @RequestHeader(value = USER_ID) Integer userId) {
-        log.info("Создан новый запрос");
+        log.info("Пользователь id {} получил запрос id {}", userId, requestId);
         return itemRequestService.getRequest(userId, requestId);
     }
 
@@ -47,7 +47,7 @@ public class ItemRequestController {
     public List<ItemRequestDtoResponse> getAllRequests(@RequestHeader(value = USER_ID) Integer userId,
                                                        @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                        @RequestParam(defaultValue = "10") @Positive int size) {
-        log.info("Создан новый запрос");
+        log.info("Пользователь id {} получил список всех запросов", userId);
         return itemRequestService.getAllRequests(userId, from, size);
     }
 }

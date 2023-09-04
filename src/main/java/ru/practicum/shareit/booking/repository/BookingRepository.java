@@ -17,24 +17,24 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     Page<Booking> findAllByBookerId(Integer userId, Pageable page);
 
-    Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime dateTime1,
-                                                                             LocalDateTime dateTime2, Pageable page);
+    Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime startDate,
+                                                                             LocalDateTime endDate, Pageable page);
 
-    Page<Booking> findAllByBookerIdAndStartAfter(Integer userId, LocalDateTime dateTime, Pageable page);
+    Page<Booking> findAllByBookerIdAndStartAfter(Integer userId, LocalDateTime startDate, Pageable page);
 
-    Page<Booking> findAllByBookerIdAndEndBefore(Integer userId, LocalDateTime dateTime, Pageable page);
+    Page<Booking> findAllByBookerIdAndEndBefore(Integer userId, LocalDateTime endDate, Pageable page);
 
     Page<Booking> findAllByItemOwnerIdAndStatus(Integer userId, Status status, Pageable page);
 
     Page<Booking> findAllByItemOwnerId(Integer userId, Pageable page);
 
-    Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime dateTime1,
-                                                                                LocalDateTime dateTime2, Pageable page);
+    Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime startDate,
+                                                                                LocalDateTime endDate, Pageable page);
 
-    Page<Booking> findAllByItemOwnerIdAndStartAfter(Integer userId, LocalDateTime dateTime,
+    Page<Booking> findAllByItemOwnerIdAndStartAfter(Integer userId, LocalDateTime startDate,
                                                                     Pageable page);
 
-    Page<Booking> findAllByItemOwnerIdAndEndBefore(Integer userId, LocalDateTime dateTime,
+    Page<Booking> findAllByItemOwnerIdAndEndBefore(Integer userId, LocalDateTime endDate,
                                                                    Pageable page);
 
     BookingDto findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(Integer itemId,
@@ -42,11 +42,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                                                                          Status status);
 
     BookingDto findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(Integer itemId,
-                                                                        LocalDateTime dateTime,
+                                                                        LocalDateTime startDate,
                                                                         Status status);
 
     List<Booking> findAllByItemIdAndBookerIdAndStatusIsAndEndBefore(Integer itemId, Integer bookerId,
-                                                                    Status status, LocalDateTime dateTime);
+                                                                    Status status, LocalDateTime endDate);
 
     List<BookingDto> findAllByItemInAndStartAfterAndStatusNot(List<Item> items, LocalDateTime now, Status status,
                                                               Sort sort);

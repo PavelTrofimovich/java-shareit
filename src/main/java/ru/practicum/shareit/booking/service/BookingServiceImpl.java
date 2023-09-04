@@ -66,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.toBookingDtoResponse(booking);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public BookingDtoResponse getBooking(Integer userId, Integer bookingId) {
         if (!userRepository.existsById(userId)) {
@@ -80,13 +80,13 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.toBookingDtoResponse(booking);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDtoResponse> getBookings(Integer userId, String stateStr, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
-        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC,"start"));
+        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC, "start"));
 
         LocalDateTime timeNow = LocalDateTime.now();
         List<Booking> listBookings = new ArrayList<>();
@@ -122,13 +122,13 @@ public class BookingServiceImpl implements BookingService {
         return list;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDtoResponse> getBookingsOwner(Integer userId, String stateStr, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
-        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC,"start"));
+        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC, "start"));
         LocalDateTime timeNow = LocalDateTime.now();
         State state = checkState(stateStr);
         List<Booking> listBookings = new ArrayList<>();
