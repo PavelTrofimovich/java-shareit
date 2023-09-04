@@ -21,7 +21,7 @@ public class ItemRequestDtoTest {
 
     @Test
     void itemRequestDtoJsonTest() throws IOException {
-        LocalDateTime created = LocalDateTime.of(2001,2,3,4,5,6);
+        LocalDateTime created = LocalDateTime.of(2001, 2, 3, 4, 5, 6);
         ItemRequestDto dto = new ItemRequestDto(1, "description", created);
 
         JsonContent<ItemRequestDto> content = jTester.write(dto);

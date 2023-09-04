@@ -28,8 +28,8 @@ public class BookingDtoTest {
 
     @Test
     void bookingDtoResponseJsonTest() throws IOException {
-        LocalDateTime start = LocalDateTime.of(2001,2,3,4,5,6);
-        LocalDateTime end = LocalDateTime.of(2002,2,3,4,5,6);
+        LocalDateTime start = LocalDateTime.of(2001, 2, 3, 4, 5, 6);
+        LocalDateTime end = LocalDateTime.of(2002, 2, 3, 4, 5, 6);
         UserDto userDto = new UserDto(1, "name", "mail@mail.by");
         ItemDto itemDto = new ItemDto(1, "name", "description", true, 1);
         BookingDtoResponse dtoResponse = new BookingDtoResponse(1, start, end, Status.APPROVED, userDto, itemDto);
