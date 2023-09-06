@@ -68,12 +68,12 @@ class BookingServiceIntegrationTest {
     @Test
     void getBookingsIntegrationTest() {
         Integer id = booker.getId();
-        Assertions.assertEquals(9, bookingService.getBookings(id, State.ALL, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.WAITING, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.APPROVED, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.REJECTED, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.CURRENT, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.FUTURE, 0, 10).size());
-        Assertions.assertEquals(3, bookingService.getBookings(id, State.PAST, 0, 10).size());
+        Assertions.assertEquals(9, bookingService.getBookings(id, "ALL", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "WAITING", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "APPROVED", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "REJECTED", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "CURRENT", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "FUTURE", 0, 10).size());
+        Assertions.assertEquals(3, bookingService.getBookings(id, "PAST", 0, 10).size());
     }
 }
