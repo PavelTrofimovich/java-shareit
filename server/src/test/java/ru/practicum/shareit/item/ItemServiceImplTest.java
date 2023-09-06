@@ -33,7 +33,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
