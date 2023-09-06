@@ -45,8 +45,6 @@ public class ItemClient extends BaseClient {
         return get("?from={from}&size={size}", userId, parameters);
     }
 
-
-
     public ResponseEntity<Object> searchItems(Integer userId, String text, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "text", text,
@@ -59,6 +57,4 @@ public class ItemClient extends BaseClient {
     public ResponseEntity<Object> postComment(Integer userId, Integer itemId, CommentDtoRequest commentDtoRequest) {
         return post("/" + itemId + "/comment", userId, commentDtoRequest);
     }
-
-
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,14 +20,16 @@ public class BookingDtoRequest {
 
     @Future
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime start;
 
     @Future
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime end;
 
     @AssertTrue
-    private boolean isStartBeforeEnd() {  //Без этого метода валятся тесты
+    private boolean isStartBeforeEnd() {
         return Objects.nonNull(start) && Objects.nonNull(end) && start.isBefore(end);
     }
 }
