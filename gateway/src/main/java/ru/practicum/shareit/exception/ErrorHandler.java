@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.exceptions.*;
 import ru.practicum.shareit.exception.model.ErrorResponse;
 
+import java.util.Map;
+
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
@@ -39,5 +41,12 @@ public class ErrorHandler {
     public ErrorResponse handleThrowable(final Throwable e) {
         log.error(e.getMessage());
         return new ErrorResponse("Произошла непредвиденная ошибка.");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleUnknownStateException(final UnknownStateException e) {
+        log.warn(e.toString());
+        return Map.of("error", "Unknown state: " + e.getMessage());
     }
 }

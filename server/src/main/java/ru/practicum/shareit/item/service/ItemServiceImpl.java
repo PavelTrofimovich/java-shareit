@@ -101,11 +101,11 @@ public class ItemServiceImpl implements ItemService {
         if (item.getOwner().getId().equals(userId)) {
             LocalDateTime dateTimeNow = LocalDateTime.now();
             lastBooking = bookingRepository
-                    .findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(item.getId(),
-                            dateTimeNow, Status.APPROVED);
+                    .findFirstByItemIdAndStartBeforeAndStatus(item.getId(),
+                            dateTimeNow, Status.APPROVED, Sort.by(DESC, "start"));
             nextBooking = bookingRepository
-                    .findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(item.getId(),
-                            dateTimeNow, Status.REJECTED);
+                    .findFirstByItemIdAndStartAfterAndStatusNot(item.getId(), dateTimeNow, Status.REJECTED,
+                            Sort.by(ASC, "start"));
         }
         return ItemMapper.toItemCommentDto(item, commentDto, lastBooking, nextBooking);
     }

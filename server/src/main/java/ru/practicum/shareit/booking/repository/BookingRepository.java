@@ -18,7 +18,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Page<Booking> findAllByBookerId(Integer userId, Pageable page);
 
     Page<Booking> findAllByBookerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime startDate,
-                                                                             LocalDateTime endDate, Pageable page);
+                                                             LocalDateTime endDate, Pageable page);
 
     Page<Booking> findAllByBookerIdAndStartAfter(Integer userId, LocalDateTime startDate, Pageable page);
 
@@ -29,21 +29,20 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Page<Booking> findAllByItemOwnerId(Integer userId, Pageable page);
 
     Page<Booking> findAllByItemOwnerIdAndStartBeforeAndEndAfter(Integer userId, LocalDateTime startDate,
-                                                                                LocalDateTime endDate, Pageable page);
+                                                                LocalDateTime endDate, Pageable page);
 
     Page<Booking> findAllByItemOwnerIdAndStartAfter(Integer userId, LocalDateTime startDate,
-                                                                    Pageable page);
+                                                    Pageable page);
 
     Page<Booking> findAllByItemOwnerIdAndEndBefore(Integer userId, LocalDateTime endDate,
-                                                                   Pageable page);
+                                                   Pageable page);
 
-    BookingDto findFirstByItemIdAndStartAfterAndStatusNotOrderByStartAsc(Integer itemId,
+    BookingDto findFirstByItemIdAndStartAfterAndStatusNot(Integer itemId,
                                                                          LocalDateTime now,
-                                                                         Status status);
+                                                                         Status status, Sort sort);
 
-    BookingDto findFirstByItemIdAndStartBeforeAndStatusOrderByStartDesc(Integer itemId,
-                                                                        LocalDateTime startDate,
-                                                                        Status status);
+    BookingDto findFirstByItemIdAndStartBeforeAndStatus(Integer itemId, LocalDateTime startDate,
+                                                        Status status, Sort sort);
 
     List<Booking> findAllByItemIdAndBookerIdAndStatusIsAndEndBefore(Integer itemId, Integer bookerId,
                                                                     Status status, LocalDateTime endDate);

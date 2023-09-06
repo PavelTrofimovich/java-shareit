@@ -85,7 +85,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
-        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC, "start"));
+        PageRequest page = PageRequest.of(from/size, size, Sort.by(DESC, "start"));
 
         LocalDateTime timeNow = LocalDateTime.now();
         List<Booking> listBookings = new ArrayList<>();
@@ -126,7 +126,7 @@ public class BookingServiceImpl implements BookingService {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
-        PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC, "start"));
+        PageRequest page = PageRequest.of(from/size, size, Sort.by(DESC, "start"));
         LocalDateTime timeNow = LocalDateTime.now();
         List<Booking> listBookings = new ArrayList<>();
         switch (checkState(stateStr)) {
