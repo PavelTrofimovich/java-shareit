@@ -30,8 +30,7 @@ public class ItemController {
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader(value = USER_ID) Integer userId,
-                              @RequestBody ItemDto itemDto, @PathVariable Integer itemId)
-    {
+                              @RequestBody ItemDto itemDto, @PathVariable Integer itemId) {
         log.info("Запрос на обновление Item с ID {}", itemId);
         return itemService.updateItem(itemDto, itemId, userId);
     }

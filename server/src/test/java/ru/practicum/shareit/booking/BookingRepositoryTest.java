@@ -117,7 +117,7 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByItemOwnerIdAndEndBeforeOrderByStartDescTest() {
-        List<Booking> result = bookingRepository.findAllByItemOwnerIdAndEndBefore(item.getOwner().getId(),  now.plusDays(4), Pageable.unpaged()).toList();
+        List<Booking> result = bookingRepository.findAllByItemOwnerIdAndEndBefore(item.getOwner().getId(), now.plusDays(4), Pageable.unpaged()).toList();
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(booking, result.get(0));
@@ -125,7 +125,7 @@ class BookingRepositoryTest {
 
     @Test
     void findAllByItemIdAndBookerIdAndStatusIsAndEndBeforeTest() {
-        List<Booking> result = bookingRepository.findAllByItemIdAndBookerIdAndStatusIsAndEndBefore(item.getId(), booker.getId(), Status.APPROVED,  now.plusDays(4));
+        List<Booking> result = bookingRepository.findAllByItemIdAndBookerIdAndStatusIsAndEndBefore(item.getId(), booker.getId(), Status.APPROVED, now.plusDays(4));
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(booking, result.get(0));
