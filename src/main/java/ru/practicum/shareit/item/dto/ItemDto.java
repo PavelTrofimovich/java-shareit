@@ -18,4 +18,5 @@ public class ItemDto {
     private String description;
     @NotNull
     private Boolean available;
+    private Integer requestId;
 }

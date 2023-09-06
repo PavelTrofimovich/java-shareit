@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
@@ -44,13 +48,21 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Transactional
     @Override
     public ItemDto addNewItem(ItemDto itemDto, Integer userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        ItemRequest itemRequest = null;
+        Integer itemRequestId = itemDto.getRequestId();
+        if (itemRequestId != null) {
+            itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос не найден"));
+        }
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user);
+        item.setItemRequest(itemRequest);
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
@@ -100,22 +112,26 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public List<ItemCommentDto> getUserItems(Integer userId) {
+    public List<ItemCommentDto> getUserItems(Integer userId, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
         LocalDateTime now = LocalDateTime.now();
-        List<Item> items = itemRepository.findAllByOwnerId(userId);
+        PageRequest page = PageRequest.of(from / size, size);
+        Page<Item> items = itemRepository.findAllByOwnerId(userId, page);
         List<ItemCommentDto> listItemCommentDto = new ArrayList<>();
         List<BookingDto> nextBookingsList = bookingRepository
-                .findAllByItemInAndStartAfterAndStatusNot(items, now, Status.REJECTED, Sort.by(ASC, "start"));
+                .findAllByItemInAndStartAfterAndStatusNot(items.toList(), now, Status.REJECTED,
+                        Sort.by(ASC, "start"));
         Map<Integer, List<BookingDto>> nextBookingsMap = nextBookingsList.stream()
                 .collect(groupingBy(BookingDto::getItemId, toList()));
         List<BookingDto> lastBookingsList = bookingRepository
-                .findAllByItemInAndStartBeforeAndStatus(items, now, Status.APPROVED, Sort.by(DESC, "start"));
+                .findAllByItemInAndStartBeforeAndStatus(items.toList(), now, Status.APPROVED,
+                        Sort.by(DESC, "start"));
         Map<Integer, List<BookingDto>> lastBookingsMap = lastBookingsList.stream()
                 .collect(groupingBy(BookingDto::getItemId, toList()));
-        Map<Integer, List<Comment>> comments = commentRepository.findByItemIn(items, Sort.by(DESC, "created"))
+        Map<Integer, List<Comment>> comments = commentRepository.findByItemIn(items.toList(),
+                        Sort.by(DESC, "created"))
                 .stream()
                 .collect(groupingBy(comment -> comment.getItem().getId(), toList()));
         items.forEach(item -> {
@@ -139,17 +155,19 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public List<ItemDto> searchItems(Integer userId, String search) {
+    public List<ItemDto> searchItems(Integer userId, String search, int from, int size) {
         if (search.isBlank()) {
             return new ArrayList<>();
         } else {
+            PageRequest page = PageRequest.of(from / size, size);
             List<ItemDto> itemDtoList = new ArrayList<>();
-            itemRepository.findAllItemsByNameOrDescriptionContainingIgnoreCase(search)
+            itemRepository.findAllItemsByNameOrDescriptionContainingIgnoreCase(search, page)
                     .forEach(item -> itemDtoList.add(ItemMapper.toItemDto(item)));
             return itemDtoList;
         }
     }
 
+    @Override
     public CommentDto postComment(CommentDtoRequest commentDtoRequest, Integer itemId, Integer authorId) {
         LocalDateTime dateTime = LocalDateTime.now();
         List<Booking> bookings = bookingRepository
