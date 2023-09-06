@@ -28,7 +28,7 @@ public class BookingController {
 	public ResponseEntity<Object> addBooking(@RequestHeader(USER_ID) Integer userId,
 												@RequestBody @Valid BookingDtoRequest bookingDto) {
 		log.info("Creating Booking {}, userId={}", bookingDto, userId);
-		return bookingClient.addBooking(userId, bookingDto);
+		return bookingClient.addBooking(bookingDto, userId);
 	}
 
 	@PatchMapping("/{bookingId}")

@@ -4,7 +4,7 @@ services:
     build:
       context: gateway
       dockerfile: Dockerfile
-    image: shareit-gateway
+    image: shareit-gateway:latest
     container_name: shareit-gateway
     ports:
       - "8080:8080"
@@ -17,7 +17,7 @@ services:
     build:
       context: server
       dockerfile: Dockerfile
-    image: shareit-server
+    image: shareit-server:latest
     container_name: shareit-server
     ports:
       - "9090:9090"
@@ -29,7 +29,9 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
 
   db:
-    image: postgres:15.3-alpine
+    image: postgres:13.7-alpine
+    volumes:
+      - /var/lib/postgresql/data/
     container_name: shareit-db
     ports:
       - "6541:5432"
