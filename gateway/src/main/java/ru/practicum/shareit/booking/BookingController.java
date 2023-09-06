@@ -14,7 +14,6 @@ import ru.practicum.shareit.exception.exceptions.UnknownStateException;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -27,7 +26,7 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<Object> addBooking(@RequestHeader(value = USER_ID) Integer userId,
-										 @RequestBody BookingDtoRequest bookingDto) {
+										 @RequestBody @Valid BookingDtoRequest bookingDto) {
 		log.info("Создано новое бронирование");
 		return bookingClient.addBooking(bookingDto, userId);
 	}
