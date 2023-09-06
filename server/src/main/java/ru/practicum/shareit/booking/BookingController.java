@@ -27,7 +27,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse approvedBooking(@RequestHeader(value = USER_ID) Integer userId,
                                               @PathVariable Integer bookingId,
-                                              @RequestParam Boolean approved) {
+                                              @RequestParam(name = "approved") boolean approved) {
         log.info("Запрос на подтверждение бронирования");
         return bookingService.approvedBooking(userId, bookingId, approved);
     }

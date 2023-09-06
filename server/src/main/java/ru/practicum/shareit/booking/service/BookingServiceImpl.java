@@ -51,7 +51,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingDtoResponse approvedBooking(Integer userId, Integer bookingId, Boolean approved) {
+    public BookingDtoResponse approvedBooking(Integer userId, Integer bookingId, boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь не найдена"));
         if (!booking.getItem().getOwner().getId().equals(userId)) {
@@ -163,6 +163,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private State checkState(String state) {
-        return State.valueOf(state);
+        return State.valueOf(state.toUpperCase());
     }
 }
