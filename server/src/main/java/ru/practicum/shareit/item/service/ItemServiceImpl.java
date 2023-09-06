@@ -117,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException("Пользователь не найден");
         }
         LocalDateTime now = LocalDateTime.now();
-        PageRequest page = PageRequest.of(from / size, size);
+        PageRequest page = PageRequest.of(from / size, size, Sort.by(ASC, "id"));
         Page<Item> items = itemRepository.findAllByOwnerId(userId, page);
         List<ItemCommentDto> listItemCommentDto = new ArrayList<>();
         List<BookingDto> nextBookingsList = bookingRepository

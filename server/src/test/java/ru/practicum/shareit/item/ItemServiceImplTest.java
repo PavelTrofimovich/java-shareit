@@ -7,9 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
@@ -35,6 +33,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @ExtendWith(MockitoExtension.class)
 class ItemServiceImplTest {
@@ -116,8 +115,9 @@ class ItemServiceImplTest {
 
     @Test
     void getUserItemsTest() {
+
         when(userRepository.existsById(anyInt())).thenReturn(true);
-        when(itemRepository.findAllByOwnerId(anyInt(), eq(pageRequest))).thenReturn(new PageImpl<>(List.of(item)));
+        when(itemRepository.findAllByOwnerId(anyInt(), any(Pageable.class))).thenReturn(new PageImpl<>(List.of(item)));
         when(bookingRepository.findAllByItemInAndStartAfterAndStatusNot(eq(List.of(item)), any(LocalDateTime.class),
                 eq(Status.REJECTED), any(Sort.class))).thenReturn(List.of(nextBookingDto));
         when(bookingRepository.findAllByItemInAndStartBeforeAndStatus(eq(List.of(item)), any(LocalDateTime.class),

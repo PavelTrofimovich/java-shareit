@@ -27,8 +27,7 @@ public class BookingController {
     @PostMapping
     public ResponseEntity<Object> addBooking(@RequestHeader(USER_ID) @Positive Integer userId,
                                              @RequestBody @Valid BookingDtoRequest bookingDto) {
-        log.info("Creating Booking {}, userId={}", bookingDto, userId);
-
+        log.info("Создано новое бронирование {}", bookingDto);
         return bookingClient.addBooking(userId, bookingDto);
     }
 
@@ -36,16 +35,14 @@ public class BookingController {
     public ResponseEntity<Object> approvedBooking(@PathVariable @Positive Integer bookingId,
                                                   @RequestParam(name = "approved") boolean approved,
                                                   @RequestHeader(USER_ID) Integer ownerId) {
-        log.info("Approving {} Booking with ID={} and ownerId={}", approved, bookingId, ownerId);
-
+        log.info("Запрос на подтверждение бронирования с ID={}", bookingId);
         return bookingClient.approvedBooking(ownerId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getBooking(@RequestHeader(USER_ID) Integer userId,
                                              @PathVariable Integer bookingId) {
-        log.info("Get Booking {}, userId={}", bookingId, userId);
-
+        log.info("Запрос на получение бронирования {} для пользователя {}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
 
@@ -57,8 +54,7 @@ public class BookingController {
                                               @RequestParam(name = "size", defaultValue = "10")
                                               @Positive Integer size) {
         BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
-        log.info("Get Booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
-
+        log.info("Запрос на получение списка бронирований с состоянием {} для пользователя {}", state, userId);
         return bookingClient.getBookings(userId, state, from, size);
     }
 
@@ -70,8 +66,7 @@ public class BookingController {
                                                    @RequestParam(name = "size", defaultValue = "10")
                                                    @Positive Integer size) {
         BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
-        log.info("Get Booking with state {}, ownerId={}, from={}, size={}", stateParam, ownerId, from, size);
-
+        log.info("Запрос на получение списка имеющихся у пользователя {} бронирований с состоянием {}", ownerId, state);
         return bookingClient.getBookingsOwner(ownerId, state, from, size);
     }
 }
