@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDtoRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoResponse;
-import ru.practicum.shareit.booking.model.State;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDtoResponse> getBookings(@RequestHeader(value = USER_ID) Integer userId,
-                                                @RequestParam(defaultValue = "ALL") State state,
+                                                @RequestParam(defaultValue = "ALL") String state,
                                                 @RequestParam(defaultValue = "0") int from,
                                                 @RequestParam(defaultValue = "10") int size) {
         log.info("Запрос на получение списка бронирований с состоянием {} для пользователя {}", state, userId);
@@ -51,7 +50,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public List<BookingDtoResponse> getBookingsOwner(@RequestHeader(value = USER_ID) Integer userId,
-                                                     @RequestParam(defaultValue = "ALL") State state,
+                                                     @RequestParam(defaultValue = "ALL") String state,
                                                      @RequestParam(defaultValue = "0") int from,
                                                      @RequestParam(defaultValue = "10") int size) {
         log.info("Запрос на получение списка имеющихся у пользователя {} бронирований с состоянием {}", userId, state);

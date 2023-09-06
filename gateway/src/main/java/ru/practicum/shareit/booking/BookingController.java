@@ -51,7 +51,7 @@ public class BookingController {
 											  @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
 											  @RequestParam(name = "from", defaultValue = "0")
 												  @PositiveOrZero Integer from,
-											  @RequestParam(name = "size", defaultValue = "20")
+											  @RequestParam(name = "size", defaultValue = "10")
 												  @Positive Integer size) {
 		BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
 		log.info("Запрос на получение списка бронирований с состоянием {} для пользователя {}", state, userId);
@@ -63,7 +63,7 @@ public class BookingController {
 												  @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
 												  @RequestParam(name = "from", defaultValue = "0")
 													  @PositiveOrZero Integer from,
-												  @RequestParam(name = "size", defaultValue = "20")
+												  @RequestParam(name = "size", defaultValue = "10")
 													  @Positive Integer size) {
 		BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
 		log.info("Запрос на получение списка имеющихся у пользователя {} бронирований с состоянием {}", userId, state);

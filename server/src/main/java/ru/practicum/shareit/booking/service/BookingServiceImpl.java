@@ -81,7 +81,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDtoResponse> getBookings(Integer userId, State state, int from, int size) {
+    public List<BookingDtoResponse> getBookings(Integer userId, String stateStr, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
@@ -89,7 +89,7 @@ public class BookingServiceImpl implements BookingService {
 
         LocalDateTime timeNow = LocalDateTime.now();
         List<Booking> listBookings = new ArrayList<>();
-        switch (state) {
+        switch (checkState(stateStr)) {
             case WAITING:
                 listBookings = bookingRepository.findAllByBookerIdAndStatus(userId, Status.WAITING, page).toList();
                 break;
@@ -122,14 +122,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<BookingDtoResponse> getBookingsOwner(Integer userId, State state, int from, int size) {
+    public List<BookingDtoResponse> getBookingsOwner(Integer userId, String stateStr, int from, int size) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь не найден");
         }
         PageRequest page = PageRequest.of(from / size, size, Sort.by(DESC, "start"));
         LocalDateTime timeNow = LocalDateTime.now();
         List<Booking> listBookings = new ArrayList<>();
-        switch (state) {
+        switch (checkState(stateStr)) {
             case WAITING:
                 listBookings = bookingRepository.findAllByItemOwnerIdAndStatus(userId, Status.WAITING, page).toList();
                 break;
@@ -160,5 +160,9 @@ public class BookingServiceImpl implements BookingService {
         List<BookingDtoResponse> list = new ArrayList<>();
         listBookings.forEach(booking -> list.add(BookingMapper.toBookingDtoResponse(booking)));
         return list;
+    }
+
+    private State checkState(String state) {
+        return State.valueOf(state);
     }
 }
