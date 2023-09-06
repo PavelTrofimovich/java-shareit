@@ -35,9 +35,9 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Object> deleteUser(@PathVariable Integer id) {
         log.info("Запрос на удаление пользователя с ID {}", id);
-        userClient.deleteUser(id);
+        return userClient.deleteUser(id);
     }
 
     @GetMapping

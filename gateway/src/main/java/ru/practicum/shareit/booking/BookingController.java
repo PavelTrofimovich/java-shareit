@@ -14,6 +14,7 @@ import ru.practicum.shareit.exception.exceptions.UnknownStateException;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -25,50 +26,48 @@ public class BookingController {
 	private static final String USER_ID = "X-Sharer-User-Id";
 
 	@PostMapping
-	public ResponseEntity<Object> addBooking(@RequestHeader(USER_ID) Integer userId,
-												@RequestBody @Valid BookingDtoRequest bookingDto) {
-		log.info("Creating Booking {}, userId={}", bookingDto, userId);
+	public ResponseEntity<Object> addBooking(@RequestHeader(value = USER_ID) Integer userId,
+										 @RequestBody BookingDtoRequest bookingDto) {
+		log.info("Создано новое бронирование");
 		return bookingClient.addBooking(bookingDto, userId);
 	}
 
 	@PatchMapping("/{bookingId}")
-	public ResponseEntity<Object> approvedBooking(@PathVariable @Positive Integer bookingId,
-													 @RequestParam(name = "approved") Boolean approved,
-													 @RequestHeader(USER_ID) Integer ownerId) {
-		log.info("Approving {} Booking with ID={} and ownerId={}", approved, bookingId, ownerId);
-		return bookingClient.approvedBooking(ownerId, bookingId, approved);
+	public ResponseEntity<Object> approvedBooking(@RequestHeader(value = USER_ID) Integer userId,
+											  @PathVariable Integer bookingId,
+											  @RequestParam Boolean approved) {
+		log.info("Запрос на подтверждение бронирования");
+		return bookingClient.approvedBooking(userId, bookingId, approved);
 	}
 
 	@GetMapping("/{bookingId}")
-	public ResponseEntity<Object> getBooking(@RequestHeader(USER_ID) Integer userId,
-											 @PathVariable Integer bookingId) {
-		log.info("Get Booking {}, userId={}", bookingId, userId);
+	public ResponseEntity<Object> getBooking(@RequestHeader(value = USER_ID) Integer userId,
+										 @PathVariable Integer bookingId) {
+		log.info("Запрос на получение бронирования {} для пользователя {}", bookingId, userId);
 		return bookingClient.getBooking(userId, bookingId);
 	}
 
 	@GetMapping
-	public ResponseEntity<Object> getBookings(@RequestHeader(USER_ID) Integer userId,
-															@RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-															@RequestParam(name = "from", defaultValue = "0")
-															@PositiveOrZero Integer from,
-															@RequestParam(name = "size", defaultValue = "20")
-															@Positive Integer size) {
-		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new UnknownStateException(stateParam));
-		log.info("Get Booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+	public ResponseEntity<Object> getBookings(@RequestHeader(value = USER_ID) Integer userId,
+											  @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
+											  @RequestParam(name = "from", defaultValue = "0")
+												  @PositiveOrZero Integer from,
+											  @RequestParam(name = "size", defaultValue = "20")
+												  @Positive Integer size) {
+		BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
+		log.info("Запрос на получение списка бронирований с состоянием {} для пользователя {}", state, userId);
 		return bookingClient.getBookings(userId, state, from, size);
 	}
 
 	@GetMapping("/owner")
-	public ResponseEntity<Object> getBookingsOwner(@RequestHeader(USER_ID) Integer ownerId,
-														   @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-														   @RequestParam(name = "from", defaultValue = "0")
-														   @PositiveOrZero Integer from,
-														   @RequestParam(name = "size", defaultValue = "20")
-														   @Positive Integer size) {
-		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-		log.info("Get Booking with state {}, ownerId={}, from={}, size={}", stateParam, ownerId, from, size);
-		return bookingClient.getBookingsOwner(ownerId, state, from, size);
+	public ResponseEntity<Object> getBookingsOwner(@RequestHeader(value = USER_ID) Integer userId,
+												  @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
+												  @RequestParam(name = "from", defaultValue = "0")
+													  @PositiveOrZero Integer from,
+												  @RequestParam(name = "size", defaultValue = "20")
+													  @Positive Integer size) {
+		BookingState state = BookingState.from(stateParam).orElseThrow(() -> new UnknownStateException(stateParam));
+		log.info("Запрос на получение списка имеющихся у пользователя {} бронирований с состоянием {}", userId, state);
+		return bookingClient.getBookingsOwner(userId, state, from, size);
 	}
 }
